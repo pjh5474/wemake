@@ -33,6 +33,7 @@ export default function HomePage() {
             commentsCount={12}
             viewsCount={12}
             votesCount={120}
+            key={`productId-${index}`}
           />
         ))}
       </div>
@@ -56,6 +57,7 @@ export default function HomePage() {
             authorAvatarUrl="https://github.com/shadcn.png"
             category="Productivity"
             timeAgo="12 hours ago"
+            key={`postId-${index}`}
           />
         ))}
       </div>

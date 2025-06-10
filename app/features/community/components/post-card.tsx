@@ -30,8 +30,8 @@ export function PostCard({
   timeAgo,
 }: PostCardProps) {
   return (
-    <Link to={`/community/${id}`}>
-      <Card className="bg-transparent hover:bg-card/50 transition-colors">
+    <Card className="bg-transparent hover:bg-card/50 transition-colors">
+      <Link to={`/community/${id}`} className="block">
         <CardHeader className="flex flex-row items-center gap-2">
           <Avatar className="size-14">
             <AvatarImage src={authorAvatarUrl} />
@@ -47,12 +47,12 @@ export function PostCard({
             </div>
           </div>
         </CardHeader>
-        <CardFooter className="flex justify-end">
-          <Button variant="link" asChild className="p-0">
-            <Link to={`/community/${id}`}>Reply &rarr;</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    </Link>
+      </Link>
+      <CardFooter className="flex justify-end">
+        <Button variant="link" asChild className="p-0">
+          <Link to={`/community/${id}`}>Reply &rarr;</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
