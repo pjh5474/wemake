@@ -1,3 +1,4 @@
+import { DotIcon } from "lucide-react";
 import { Link } from "react-router";
 import {
   Avatar,
@@ -30,8 +31,8 @@ export function PostCard({
   timeAgo,
 }: PostCardProps) {
   return (
-    <Card className="bg-transparent hover:bg-card/50 transition-colors">
-      <Link to={`/community/${id}`} className="block">
+    <Link to={`/community/${id}`}>
+      <Card className="bg-transparent hover:bg-card/50 transition-colors">
         <CardHeader className="flex flex-row items-center gap-2">
           <Avatar className="size-14">
             <AvatarImage src={authorAvatarUrl} />
@@ -42,17 +43,15 @@ export function PostCard({
             <div className="flex gap-2 text-sm leading-tight text-muted-foreground">
               <span>{author} on</span>
               <span>{category}</span>
-              <span>•</span>
+              <DotIcon className="size-4" />
               <span>{timeAgo}</span>
             </div>
           </div>
         </CardHeader>
-      </Link>
-      <CardFooter className="flex justify-end">
-        <Button variant="link" asChild className="p-0">
-          <Link to={`/community/${id}`}>Reply &rarr;</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardFooter className="flex justify-end">
+          <Button variant="link">Reply &rarr;</Button>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
