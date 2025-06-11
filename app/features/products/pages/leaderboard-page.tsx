@@ -1,5 +1,7 @@
-import type { Route } from "~/types";
 import { Link, type MetaFunction } from "react-router";
+import { Hero } from "~/common/components/hero";
+import { ProductCard } from "../components/product-card";
+import { Button } from "~/common/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,46 +13,116 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export function loader({ request }: Route.LoaderArgs) {
-  return {};
-}
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export default function LeaderboardPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function LeaderboardPage() {
   return (
-    <div className="container py-8">
-      <h1 className="text-4xl font-bold">Product Leaderboard</h1>
-      <div className="mt-6 space-y-4">
-        <Link
-          to="/products/leaderboards/yearly/2024"
-          className="block p-4 border rounded-lg hover:bg-gray-50"
-        >
-          Yearly Leaderboard
-        </Link>
-        <Link
-          to="/products/leaderboards/monthly/2024/3"
-          className="block p-4 border rounded-lg hover:bg-gray-50"
-        >
-          Monthly Leaderboard
-        </Link>
-        <Link
-          to="/products/leaderboards/weekly/2024/12"
-          className="block p-4 border rounded-lg hover:bg-gray-50"
-        >
-          Weekly Leaderboard
-        </Link>
-        <Link
-          to="/products/leaderboards/daily/2024/3/15"
-          className="block p-4 border rounded-lg hover:bg-gray-50"
-        >
-          Daily Leaderboard
-        </Link>
+    <div className="space-y-20">
+      <Hero
+        title="Leaderboards"
+        subtitle="The most popular products on wemake"
+      />
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-3xl font-bold leading-tight tracking-tight">
+            Daily Leaderboard
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            The most popular products on wemake by day.
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
+        <Button variant="link" asChild className="text-lg self-center">
+          <Link to="/products/leaderboards/daily">
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-3xl font-bold leading-tight tracking-tight">
+            Weekly Leaderboard
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            The most popular products on wemake by week.
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
+        <Button variant="link" asChild className="text-lg self-center">
+          <Link to="/products/leaderboards/weekly">
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-3xl font-bold leading-tight tracking-tight">
+            Monthly Leaderboard
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            The most popular products on wemake by month.
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
+        <Button variant="link" asChild className="text-lg self-center">
+          <Link to="/products/leaderboards/monthly">
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-3xl font-bold leading-tight tracking-tight">
+            Yearly Leaderboard
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            The most popular products on wemake by year.
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
+        <Button variant="link" asChild className="text-lg self-center">
+          <Link to="/products/leaderboards/yearly">
+            Explore all products &rarr;
+          </Link>
+        </Button>
       </div>
     </div>
   );
