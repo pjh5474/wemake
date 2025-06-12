@@ -1,9 +1,10 @@
-import { Link, type MetaFunction } from "react-router";
+import { Link } from "react-router";
 import { Hero } from "~/common/components/hero";
 import { ProductCard } from "../components/product-card";
 import { Button } from "~/common/components/ui/button";
+import type { Route } from "./+types/leaderboard-page";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "Leaderboard | wemake" },
     {

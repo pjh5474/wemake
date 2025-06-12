@@ -1,47 +1,39 @@
-import type { Route } from "~/types";
-import { type MetaFunction } from "react-router";
+import { Hero } from "~/common/components/hero";
+import { ProductCard } from "../components/product-card";
+import type { Route } from "./+types/category-page";
+import ProductPagination from "~/common/components/product-pagination";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ params }) => {
   return [
-    { title: "Category | wemake" },
+    { title: `Developer Tools | wemake` },
     {
       name: "description",
-      content: "Discover amazing products in the category",
+      content: `Browse Developer Tools products`,
     },
   ];
 };
 
-export function loader({ request, params }: Route.LoaderArgs) {
-  const { category } = params;
-  // 실제로는 데이터베이스에서 카테고리 정보를 가져와야 합니다
-  const categoryInfo = {
-    id: category,
-    name:
-      category?.charAt(0).toUpperCase() + category?.slice(1).replace(/-/g, " "),
-    description: `Discover amazing products in the ${category} category.`,
-  };
-
-  return { category: categoryInfo };
-}
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export default function CategoryPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps<{
-  category: { id: string; name: string; description: string };
-}>) {
+export default function CategoryPage() {
   return (
-    <div className="container py-8">
-      <h1 className="text-4xl font-bold">{loaderData.category.name}</h1>
-      <p className="mt-4 text-gray-600">{loaderData.category.description}</p>
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Product cards will be rendered here */}
+    <div className="space-y-10">
+      <Hero
+        title="Developer Tools"
+        subtitle={`Tools for developers to build products faster`}
+      />
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {Array.from({ length: 11 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
       </div>
+      <ProductPagination totalPages={10} />
     </div>
   );
 }
