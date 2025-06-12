@@ -14,7 +14,7 @@ interface IdeaCardProps {
   id: string;
   title: string;
   viewCount: number;
-  timeAgo: string;
+  createdAt: string;
   likeCount: number;
   claimed: boolean;
 }
@@ -23,7 +23,7 @@ export function IdeaCard({
   id,
   title,
   viewCount,
-  timeAgo,
+  createdAt,
   likeCount,
   claimed,
 }: IdeaCardProps) {
@@ -50,7 +50,7 @@ export function IdeaCard({
           <span>{viewCount}</span>
         </div>
         <DotIcon className="size-4" />
-        <span>{timeAgo}</span>
+        <span>{createdAt}</span>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Button variant="outline">
