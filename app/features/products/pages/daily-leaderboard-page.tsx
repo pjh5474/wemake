@@ -35,7 +35,7 @@ export const meta: Route.MetaFunction = ({ params }) => {
   ];
 };
 
-export const loader = ({ request, params }: Route.LoaderArgs) => {
+export const loader = ({ params }: Route.LoaderArgs) => {
   const { success, data: parsedData } = paramsSchema.safeParse(params);
   if (!success) {
     throw data(

@@ -1,7 +1,13 @@
-import type { Route } from "~/types";
-import { Form, type MetaFunction } from "react-router";
+import { z } from "zod";
+import type { Route } from "./+types/search-page";
+import { data, Form } from "react-router";
+import { Hero } from "~/common/components/hero";
+import ProductPagination from "~/common/components/product-pagination";
+import { ProductCard } from "../components/product-card";
+import { Input } from "~/common/components/ui/input";
+import { Button } from "~/common/components/ui/button";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "Search Products | wemake" },
     {
@@ -11,51 +17,56 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+const paramsSchema = z.object({
+  query: z.string().optional().default(""),
+  page: z.coerce.number().int().optional().default(1),
+});
+
 export function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const query = url.searchParams.get("q") || "";
-  return { query };
+  const { success, data: parsedData } = paramsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw data(
+      {
+        error_code: "INVALID_PARAMS",
+        message: "Invalid params",
+      },
+      { status: 400 }
+    );
+  }
 }
 
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export default function SearchPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps<{ query: string }>) {
+export default function SearchPage({ loaderData }: Route.ComponentProps) {
   return (
-    <div className="container py-8">
-      <h1 className="text-4xl font-bold">Search Products</h1>
-
-      <Form method="get" className="mt-8">
-        <div className="flex gap-4">
-          <input
-            type="search"
-            name="q"
-            defaultValue={loaderData.query}
-            placeholder="Search for products..."
-            className="flex-1 px-4 py-2 border rounded-lg"
-          />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg"
-          >
-            Search
-          </button>
-        </div>
+    <div className="space-y-10">
+      <Hero
+        title="Search"
+        subtitle="Search for products by title or description"
+      />
+      <Form className="flex justify-center mx-auto max-w-screen-sm items-center gap-2">
+        <Input
+          name="query"
+          placeholder="Search for products..."
+          className="text-lg"
+        />
+        <Button type="submit">Search</Button>
       </Form>
-
-      <div className="mt-8">
-        {loaderData.query ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Search results will be rendered here */}
-          </div>
-        ) : (
-          <p className="text-gray-600">Enter a search term to find products</p>
-        )}
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {Array.from({ length: 11 }).map((_, index) => (
+          <ProductCard
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+            key={`productId-${index}`}
+          />
+        ))}
       </div>
+      <ProductPagination totalPages={10} />
     </div>
   );
 }
