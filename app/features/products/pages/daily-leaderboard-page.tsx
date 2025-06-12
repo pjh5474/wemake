@@ -73,11 +73,7 @@ export default function DailyLeaderboardPage({
   const isToday = urlDate.equals(DateTime.now().startOf("day"));
   return (
     <div className="space-y-10">
-      <Hero
-        title={`The best products of ${urlDate.toLocaleString(
-          DateTime.DATE_MED
-        )}`}
-      />
+      <Hero title={`Best of ${urlDate.toLocaleString(DateTime.DATE_MED)}`} />
       <div className="flex items-center justify-center gap-2">
         <Button variant="secondary" asChild>
           <Link
