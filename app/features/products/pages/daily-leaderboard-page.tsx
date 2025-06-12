@@ -1,9 +1,4 @@
-import {
-  data,
-  isRouteErrorResponse,
-  Link,
-  type MetaFunction,
-} from "react-router";
+import { data, isRouteErrorResponse, Link } from "react-router";
 import type { Route } from "./+types/daily-leaderboard-page";
 import { DateTime } from "luxon";
 import { z } from "zod";
@@ -18,9 +13,21 @@ const paramsSchema = z.object({
   day: z.coerce.number().int(),
 });
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ params }) => {
+  const date = DateTime.fromObject({
+    year: Number(params.year),
+    month: Number(params.month),
+    day: Number(params.day),
+  })
+    .setZone("Asia/Seoul")
+    .setLocale("ko");
+
+  if (!date.isValid) {
+    return [{ title: "Daily Leaderboard | wemake" }];
+  }
+
   return [
-    { title: "Daily Leaderboard | wemake" },
+    { title: `Best of ${date.toLocaleString(DateTime.DATE_MED)} | wemake` },
     {
       name: "description",
       content: "Discover the daily leaderboard from our community",
