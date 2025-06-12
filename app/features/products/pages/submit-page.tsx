@@ -21,7 +21,6 @@ export const meta: Route.MetaFunction = () => {
 export default function SubmitPage() {
   const [icon, setIcon] = useState<string | null>(null);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
     if (event.target.files) {
       const file = event.target.files[0];
       setIcon(URL.createObjectURL(file));

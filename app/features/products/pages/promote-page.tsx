@@ -1,105 +1,79 @@
-import type { Route } from "~/types";
-import { type MetaFunction } from "react-router";
+import { Hero } from "~/common/components/hero";
+import type { Route } from "./+types/promote-page";
+import { Form } from "react-router";
+import SelectPair from "~/common/components/select-pair";
+import { Calendar } from "~/common/components/ui/calendar";
+import { useState } from "react";
+import { Label } from "~/common/components/ui/label";
+import type { DateRange } from "react-day-picker";
+import { DateTime } from "luxon";
+import { Button } from "~/common/components/ui/button";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Promote Your Product | wemake" },
-    {
-      name: "description",
-      content: "Promote your product with our promotion plans",
-    },
+    { title: "Promote Product | ProductHunt Clone" },
+    { name: "description", content: "Promote your product" },
   ];
 };
 
-export function loader({ request }: Route.LoaderArgs) {
-  return {};
-}
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export default function PromotePage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
-  const promotionPlans = [
-    {
-      name: "Basic",
-      price: "$49",
-      features: [
-        "Featured on homepage for 24 hours",
-        "Social media promotion",
-        "Newsletter mention",
-      ],
-    },
-    {
-      name: "Premium",
-      price: "$99",
-      features: [
-        "Featured on homepage for 72 hours",
-        "Social media promotion",
-        "Newsletter mention",
-        "Featured in weekly digest",
-        "Priority support",
-      ],
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      features: [
-        "Custom promotion duration",
-        "Dedicated social media campaign",
-        "Featured interview",
-        "Custom marketing strategy",
-        "Priority support",
-        "Analytics dashboard",
-      ],
-    },
-  ];
-
+export default function PromotePage() {
+  const [promotionPeriod, setPromotionPeriod] = useState<
+    DateRange | undefined
+  >();
+  const totalDays =
+    promotionPeriod?.from && promotionPeriod.to
+      ? DateTime.fromJSDate(promotionPeriod.to).diff(
+          DateTime.fromJSDate(promotionPeriod.from),
+          "days"
+        ).days
+      : 0;
   return (
-    <div className="container py-8">
-      <h1 className="text-4xl font-bold text-center">Promote Your Product</h1>
-      <p className="mt-4 text-gray-600 text-center max-w-2xl mx-auto">
-        Get more visibility for your product with our promotion plans. Choose
-        the plan that best fits your needs.
-      </p>
-
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {promotionPlans.map((plan) => (
-          <div
-            key={plan.name}
-            className="border rounded-lg p-6 space-y-4 hover:shadow-lg transition-shadow"
-          >
-            <h2 className="text-2xl font-bold">{plan.name}</h2>
-            <p className="text-3xl font-bold text-blue-500">{plan.price}</p>
-            <ul className="space-y-2">
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            <button className="w-full px-6 py-3 mt-4 bg-blue-500 text-white font-medium rounded-lg">
-              Choose {plan.name}
-            </button>
-          </div>
-        ))}
-      </div>
+    <div>
+      <Hero
+        title="Promote Your Product"
+        subtitle="Boost your product's visibility."
+      />
+      <Form className="max-w-sm mx-auto flex flex-col gap-10 items-center">
+        <SelectPair
+          label="Select a product"
+          description="Select the product you want to promote."
+          name="product"
+          placeholder="Select a product"
+          options={[
+            {
+              label: "AI Dark Mode Maker",
+              value: "ai-dark-mode-maker",
+            },
+            {
+              label: "AI Dark Mode Maker",
+              value: "ai-dark-mode-maker-1",
+            },
+            {
+              label: "AI Dark Mode Maker",
+              value: "ai-dark-mode-maker-2",
+            },
+          ]}
+          required
+        />
+        <div className="flex flex-col gap-2 items-center w-full">
+          <Label className="flex flex-col gap-1">
+            Select a range of dates for promotion{" "}
+            <small className="text-muted-foreground text-center ">
+              Minimum duration is 3 days.
+            </small>
+          </Label>
+          <Calendar
+            mode="range"
+            selected={promotionPeriod}
+            onSelect={setPromotionPeriod}
+            min={3}
+            disabled={{ before: new Date() }}
+          />
+        </div>
+        <Button disabled={totalDays === 0}>
+          Go to checkout (${totalDays * 20})
+        </Button>
+      </Form>
     </div>
   );
 }
