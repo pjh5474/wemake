@@ -1,6 +1,6 @@
-import type { Route } from "./+types/product-reviews-page";
 import { Button } from "~/common/components/ui/button";
-import { Link } from "react-router";
+import type { Route } from "./+types/product-reviews-page";
+import { ReviewCard } from "../components/review-card";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -11,8 +11,26 @@ export const meta: Route.MetaFunction = () => {
 
 export default function ProductReviewsPage() {
   return (
-    <div>
-      <h1>Product Reviews</h1>
+    <div className="space-y-10 max-w-xl">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">10 Reviews</h2>
+        <Button variant="secondary">Write a reivew</Button>
+      </div>
+      <div className="space-y-20">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <ReviewCard
+            username="username"
+            displayName="Jane Doe"
+            avatarUrl="https://github.com/shadcn.png"
+            rating={5}
+            content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,"
+            createdAt="10 days age"
+          />
+        ))}
+      </div>
     </div>
   );
 }
