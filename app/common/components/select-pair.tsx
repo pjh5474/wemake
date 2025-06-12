@@ -28,8 +28,11 @@ export default function SelectPair({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="space-y-2 flex flex-col">
-      <Label className="flex flex-col gap-1" onClick={() => setOpen(true)}>
+    <div className="space-y-2 flex flex-col items-start">
+      <Label
+        className="flex flex-col gap-1 items-start"
+        onClick={() => setOpen(true)}
+      >
         {label}
         <small className="text-muted-foreground">{description}</small>
       </Label>
