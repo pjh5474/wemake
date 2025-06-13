@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/common/components/ui/breadcrumb";
-import { ChevronUpIcon, DotIcon } from "lucide-react";
+import { ChevronUpIcon, DotIcon, MessageCircleIcon } from "lucide-react";
 import { Button } from "~/common/components/ui/button";
 import { Textarea } from "~/common/components/ui/textarea";
 import {
@@ -15,6 +15,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/common/components/ui/avatar";
+import { Badge } from "~/common/components/ui/badge";
+import { Reply } from "../components/reply";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -27,76 +29,108 @@ export default function PostPage() {
   const { postId } = useParams();
 
   return (
-    <div className="grid grid-cols-6 items-start gap-40">
-      <div className="col-span-4 space-y-10">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/community">Community</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/community?topic=productivity">Productivity</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to={`/community/${postId}`}>
-                  What is the best productivity tool?
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <div className="flex w-full items-start gap-10">
-          <Button variant="outline" className="flex flex-col h-14">
-            <ChevronUpIcon className="size-4 shrink-0" />
-            <span>10</span>
-          </Button>
-          <div className="space-y-20">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold">
+    <div className="space-y-10">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/community">Community</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/community?topic=productivity">Productivity</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to={`/community/${postId}`}>
                 What is the best productivity tool?
-              </h2>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>@Nico </span>
-                <DotIcon className="size-5" />
-                <span>12 hours ago</span>
-                <DotIcon className="size-5" />
-                <span>10 replies</span>
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="grid grid-cols-6 items-start gap-40">
+        <div className="col-span-4 space-y-10">
+          <div className="flex w-full items-start gap-10">
+            <Button variant="outline" className="flex flex-col h-14">
+              <ChevronUpIcon className="size-4 shrink-0" />
+              <span>10</span>
+            </Button>
+            <div className="space-y-20">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold">
+                  What is the best productivity tool?
+                </h2>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>@Nico </span>
+                  <DotIcon className="size-5" />
+                  <span>12 hours ago</span>
+                  <DotIcon className="size-5" />
+                  <span>10 replies</span>
+                </div>
+                <p className="text-muted-foreground w-3/4">
+                  생산성 도구를 찾고 있는데, 현재 여러 가지 옵션들이 있어서 어떤
+                  것을 선택해야 할지 고민이 됩니다. Notion, Trello, Asana 등
+                  다양한 도구들이 있는데, 각각의 장단점이 있어서 결정하기가
+                  어렵네요. 특히 일정 관리, 할 일 목록, 문서 작성, 협업 기능
+                  등이 잘 통합된 도구를 찾고 있습니다. 여러분의 경험과 추천을
+                  듣고 싶습니다. 어떤 도구를 사용하시나요? 그리고 그 도구의 어떤
+                  점이 특히 좋으신가요?
+                </p>
               </div>
-              <p className="text-muted-foreground w-3/4">
-                생산성 도구를 찾고 있는데, 현재 여러 가지 옵션들이 있어서 어떤
-                것을 선택해야 할지 고민이 됩니다. Notion, Trello, Asana 등
-                다양한 도구들이 있는데, 각각의 장단점이 있어서 결정하기가
-                어렵네요. 특히 일정 관리, 할 일 목록, 문서 작성, 협업 기능 등이
-                잘 통합된 도구를 찾고 있습니다. 여러분의 경험과 추천을 듣고
-                싶습니다. 어떤 도구를 사용하시나요? 그리고 그 도구의 어떤 점이
-                특히 좋으신가요?
-              </p>
+              <Form className="flex items-start gap-5 w-3/4">
+                <Avatar className="size-14">
+                  <AvatarImage src="https://github.com/apple.png" />
+                  <AvatarFallback>N</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-5 w-full items-end">
+                  <Textarea
+                    placeholder="Write a reply"
+                    className="w-full resize-none"
+                    rows={5}
+                  />
+                  <Button type="submit">Reply</Button>
+                </div>
+              </Form>
+              <div className="space-y-10">
+                <h4 className="font-semibold">10 Replies</h4>
+                <div className="flex flex-col gap-5">
+                  <Reply
+                    avatarUrl="https://github.com/microsoft.png"
+                    username="Nicolas"
+                    content="I'm using Notion for my daily tasks. It's great for organizing my work and personal life."
+                    createdAt="12 hours ago"
+                    topLevel
+                  />
+                </div>
+              </div>
             </div>
-            <Form className="flex items-start gap-5 w-3/4">
-              <Avatar className="size-14">
-                <AvatarImage src="https://github.com/apple.png" />
-                <AvatarFallback>N</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-5 w-full items-end">
-                <Textarea
-                  placeholder="Write a reply"
-                  className="w-full resize-none"
-                  rows={5}
-                />
-                <Button type="submit">Reply</Button>
-              </div>
-            </Form>
           </div>
         </div>
+        <aside className="col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
+          <div className="flex gap-5">
+            <Avatar className="size-14">
+              <AvatarImage src="https://github.com/apple.png" />
+              <AvatarFallback>N</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <h4 className="text-lg font-medium">Nicolas</h4>
+              <Badge variant="secondary">Entrepreneur</Badge>
+            </div>
+          </div>
+          <div className="text-sm flex flex-col gap-2">
+            <span>😾 Joined 3 month ago</span>
+            <span>🚀 Launched 10 products</span>
+          </div>
+          <Button variant="outline" className="w-full">
+            Follow
+          </Button>
+        </aside>
       </div>
-      <aside className="col-span-2"></aside>
     </div>
   );
 }
