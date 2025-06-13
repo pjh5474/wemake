@@ -1,6 +1,7 @@
 import { Form, Link } from "react-router";
 import { Button } from "~/common/components/ui/button";
 import InputPair from "~/common/components/input-pair";
+import AuthButtons from "../components/auth-buttons";
 
 export default function LoginPage() {
   return (
@@ -33,6 +34,7 @@ export default function LoginPage() {
             Login
           </Button>
         </Form>
+        <AuthButtons />
       </div>
     </div>
   );
