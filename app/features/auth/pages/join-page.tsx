@@ -5,7 +5,7 @@ import { Button } from "~/common/components/ui/button";
 import AuthButtons from "../components/auth-buttons";
 
 export const meta: Route.MetaFunction = () => {
-  return [{ title: "Join | WeMake" }];
+  return [{ title: "Join | wemake" }];
 };
 
 export default function JoinPage() {
