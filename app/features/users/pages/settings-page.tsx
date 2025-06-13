@@ -52,6 +52,16 @@ export default function SettingsPage() {
               required
             />
             <InputPair
+              id="headline"
+              label="Headline"
+              name="headline"
+              description="An introduction to your profile"
+              type="text"
+              placeholder="I'm a software engineer..."
+              required
+              textArea
+            />
+            <InputPair
               id="bio"
               label="Bio"
               name="bio"
