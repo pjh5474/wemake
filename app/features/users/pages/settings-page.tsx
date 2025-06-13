@@ -65,15 +65,15 @@ export default function SettingsPage() {
           </Form>
         </div>
         <aside className="col-span-2 p-6 border rounded-lg shadow-sm">
-          <Label className="flex flex-col gap-1 items-start">
-            Avatar <small>This is your public avatar</small>
-          </Label>
           <div className="space-y-5">
             <div className="size-40 rounded-full shadow-xl overflow-hidden">
               {avatar ? (
                 <img src={avatar} className="object-cover w-full h-full" />
               ) : null}
             </div>
+            <Label className="flex flex-col gap-1 items-start">
+              Avatar <small>This is your public avatar</small>
+            </Label>
             <Input
               type="file"
               className="w-1/2"
