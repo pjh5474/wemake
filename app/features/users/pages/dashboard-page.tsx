@@ -38,8 +38,8 @@ const chartConfig = {
 
 export default function DashboardPage() {
   return (
-    <div>
-      <h1>Dashbaord</h1>
+    <div className="space-y-5">
+      <h1 className="text-2xl font-semibold mb-6">Dashbaord</h1>
       <Card className="w-1/2">
         <CardHeader>
           <CardTitle>Profile views</CardTitle>
