@@ -29,6 +29,13 @@
       "when": 1749971884358,
       "tag": "0003_big_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1749973227287,
+      "tag": "0004_public_krista_starr",
+      "breakpoints": true
     }
   ]
 }
