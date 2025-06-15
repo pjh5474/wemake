@@ -50,6 +50,13 @@
       "when": 1749981409074,
       "tag": "0006_thick_steel_serpent",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749982848028,
+      "tag": "0007_purple_calypso",
+      "breakpoints": true
     }
   ]
 }

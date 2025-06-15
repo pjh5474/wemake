@@ -38,7 +38,7 @@ export const profiles = pgTable("profiles", {
   profile_id: uuid()
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
-  avatar: text().notNull(),
+  avatar: text(),
   name: text().notNull(),
   username: text().notNull(),
   headline: text(),
