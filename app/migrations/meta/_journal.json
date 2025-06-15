@@ -36,6 +36,13 @@
       "when": 1749973227287,
       "tag": "0004_public_krista_starr",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1749979215641,
+      "tag": "0005_previous_vector",
+      "breakpoints": true
     }
   ]
 }
