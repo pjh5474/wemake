@@ -15,6 +15,6 @@ begin
 end;
 $$;
 
-create trigger user_to_profile_trigger
+create trigger  
 after insert on auth.users
 for each row execute function public.handle_new_user(); 
