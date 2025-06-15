@@ -43,6 +43,13 @@
       "when": 1749979215641,
       "tag": "0005_previous_vector",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1749981409074,
+      "tag": "0006_thick_steel_serpent",
+      "breakpoints": true
     }
   ]
 }
