@@ -55,12 +55,12 @@ export default function HomePage() {
         </div>
         {Array.from({ length: 11 }).map((_, index) => (
           <PostCard
-            id={`postId-${index}`}
+            id={index}
             title={`Discussion Title ${index}`}
             author="Nico"
             authorAvatarUrl="https://github.com/shadcn.png"
             category="Productivity"
-            timeAgo="12 hours ago"
+            createdAt={new Date()}
             key={`postId-${index}`}
           />
         ))}

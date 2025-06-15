@@ -16,13 +16,13 @@ export default function ProfilePostsPage() {
     <div className="flex flex-col gap-5">
       {Array.from({ length: 5 }).map((_, index) => (
         <PostCard
-          id={`postId-${index}`}
+          id={index}
           title={`Discussion Title ${index}`}
           author="Nico"
           authorAvatarUrl="https://github.com/shadcn.png"
           category="Productivity"
-          timeAgo="12 hours ago"
-          key={`postId-${index}`}
+          createdAt={new Date()}
+          key={index}
           expanded
         />
       ))}

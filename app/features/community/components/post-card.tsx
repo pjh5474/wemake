@@ -1,4 +1,5 @@
 import { ChevronUpIcon, DotIcon } from "lucide-react";
+import { DateTime } from "luxon";
 import { Link } from "react-router";
 import {
   Avatar,
@@ -15,12 +16,12 @@ import {
 import { cn } from "~/lib/utils";
 
 interface PostCardProps {
-  id: string;
+  id: number;
   title: string;
   author: string;
-  authorAvatarUrl?: string;
+  authorAvatarUrl: string | null;
   category: string;
-  timeAgo: string;
+  createdAt: Date;
   expanded?: boolean;
   votesCount?: number;
 }
@@ -31,7 +32,7 @@ export function PostCard({
   author,
   authorAvatarUrl,
   category,
-  timeAgo,
+  createdAt,
   expanded = false,
   votesCount = 0,
 }: PostCardProps) {
@@ -45,8 +46,8 @@ export function PostCard({
       >
         <CardHeader className="flex flex-row items-center gap-2 w-full">
           <Avatar className="size-14">
-            <AvatarImage src={authorAvatarUrl} />
             <AvatarFallback>{author[0].toUpperCase()}</AvatarFallback>
+            {authorAvatarUrl && <AvatarImage src={authorAvatarUrl} />}
           </Avatar>
           <div className="space-y-2 w-full">
             <CardTitle>{title}</CardTitle>
@@ -54,7 +55,7 @@ export function PostCard({
               <span>{author} on</span>
               <span>{category}</span>
               <DotIcon className="size-4" />
-              <span>{timeAgo}</span>
+              <span>{DateTime.fromJSDate(createdAt).toRelative()}</span>
             </div>
           </div>
         </CardHeader>
