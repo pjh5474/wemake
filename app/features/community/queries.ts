@@ -50,23 +50,32 @@ export const getTopics = async () => {
   return data;
 };
 
+// export const getPosts = async () => {
+//   const { data, error } = await supabaseClient.from("posts").select(`
+//     post_id,
+//     title,
+//     created_at,
+//     topic:topics!inner (
+//       name
+//     ),
+//     author:profiles!posts_profile_id_profiles_profile_id_fk!inner (
+//       name,
+//       avatar,
+//       username
+//     ),
+//     upvotes:post_upvotes (
+//       count
+//     )
+//     `);
+//   if (error) throw new Error(error.message);
+//   return data;
+// };
+
 export const getPosts = async () => {
-  const { data, error } = await supabaseClient.from("posts").select(`
-    post_id,
-    title,
-    created_at,
-    topic:topics!inner (
-      name
-    ),
-    author:profiles!posts_profile_id_profiles_profile_id_fk!inner (
-      name, 
-      avatar, 
-      username
-    ),
-    upvotes:post_upvotes (
-      count
-    )
-    `);
+  const { data, error } = await supabaseClient
+    .from("community_post_list_view")
+    .select("*");
+  console.log(data);
   if (error) throw new Error(error.message);
   return data;
 };
