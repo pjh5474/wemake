@@ -55,10 +55,16 @@ export const getPosts = async () => {
     post_id,
     title,
     created_at,
-    topic:topics!inner (name),
-    author:profiles!posts_profile_id_profiles_profile_id_fk!inner (name, avatar, username),
+    topic:topics!inner (
+      name
+    ),
+    author:profiles!posts_profile_id_profiles_profile_id_fk!inner (
+      name, 
+      avatar, 
+      username
+    ),
     upvotes:post_upvotes (
-    count
+      count
     )
     `);
   if (error) throw new Error(error.message);
