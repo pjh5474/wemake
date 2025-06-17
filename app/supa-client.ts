@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "database.types";
+import type { MergeDeep, SetNonNullable, SetFieldType } from "type-fest";
+import type { Database as SupabaseDatabase } from "database.types";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
@@ -7,5 +8,24 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY;
 if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase URL or key");
 }
+
+type Database = MergeDeep<
+  SupabaseDatabase,
+  {
+    public: {
+      Views: {
+        community_post_list_view: {
+          Row: SetFieldType<
+            SetNonNullable<
+              SupabaseDatabase["public"]["Views"]["community_post_list_view"]["Row"]
+            >,
+            "author_avatar",
+            string | null
+          >;
+        };
+      };
+    };
+  }
+>;
 
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
