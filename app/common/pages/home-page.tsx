@@ -60,7 +60,7 @@ export default function HomePage() {
             author="Nico"
             authorAvatarUrl="https://github.com/shadcn.png"
             category="Productivity"
-            createdAt={new Date()}
+            createdAt={new Date().toISOString()}
             key={`postId-${index}`}
           />
         ))}
@@ -125,7 +125,9 @@ export default function HomePage() {
             Join a team looking for a new member.
           </p>
           <Button variant="link" asChild className="text-lg p-0">
-            <Link to="/teams">Explore all teams &rarr;</Link>
+            <Link to="/teams" prefetch="viewport">
+              Explore all teams &rarr;
+            </Link>
           </Button>
         </div>
         {Array.from({ length: 11 }).map((_, index) => (

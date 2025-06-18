@@ -75,7 +75,6 @@ export const getPosts = async () => {
   const { data, error } = await supabaseClient
     .from("community_post_list_view")
     .select("*");
-  console.log(data);
   if (error) throw new Error(error.message);
   return data;
 };
