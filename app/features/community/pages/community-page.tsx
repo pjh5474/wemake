@@ -33,6 +33,13 @@ export const loader = async () => {
   return { topics, posts };
 };
 
+export const clientLoader = async ({
+  serverLoader,
+}: Route.ClientLoaderArgs) => {
+  const { topics, posts } = await serverLoader();
+  return { topics, posts };
+};
+
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const { topics, posts } = loaderData;
 
