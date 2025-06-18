@@ -1,9 +1,6 @@
-create function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-set search_path = ''
-as $$
+create function public.handle_new_user () returns trigger language plpgsql security definer
+set
+    search_path = '' as $$
 begin
     if new.raw_app_meta_data is not null then
         if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data ->> 'provider' = 'email' then
@@ -15,6 +12,6 @@ begin
 end;
 $$;
 
-create trigger  
-after insert on auth.users
-for each row execute function public.handle_new_user(); 
+create trigger
+after insert on auth.users for each row
+execute function public.handle_new_user ();
