@@ -164,3 +164,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
     </div>
   );
 }
+
+export function HydratedFallback() {
+  return <div>Loading in clientLoader</div>;
+}
