@@ -6,6 +6,8 @@ import { Hero } from "~/common/components/hero";
 import { ProductCard } from "../components/product-card";
 import { Button } from "~/common/components/ui/button";
 import ProductPagination from "~/common/components/product-pagination";
+import { getProductPagesByDateRange, getProductsByDateRange } from "../queries";
+import { LEADERBOARD_PAGE_SIZE } from "../constants";
 
 const paramsSchema = z.object({
   year: z.coerce.number().int(),
@@ -35,7 +37,7 @@ export const meta: Route.MetaFunction = ({ params }) => {
   ];
 };
 
-export const loader = ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const { success, data: parsedData } = paramsSchema.safeParse(params);
   if (!success) {
     throw data(
@@ -66,7 +68,22 @@ export const loader = ({ params }: Route.LoaderArgs) => {
       { status: 400 }
     );
   }
+
+  const url = new URL(request.url);
+  const products = await getProductsByDateRange({
+    startDate: date.startOf("day"),
+    endDate: date.endOf("day"),
+    limit: LEADERBOARD_PAGE_SIZE,
+    page: Number(url.searchParams.get("page")) || 1,
+  });
+  const totalPages = await getProductPagesByDateRange({
+    startDate: date.startOf("day"),
+    endDate: date.endOf("day"),
+  });
+
   return {
+    products,
+    totalPages,
     ...parsedData,
   };
 };
@@ -74,7 +91,11 @@ export const loader = ({ params }: Route.LoaderArgs) => {
 export default function DailyLeaderboardPage({
   loaderData,
 }: Route.ComponentProps) {
-  const urlDate = DateTime.fromObject(loaderData);
+  const urlDate = DateTime.fromObject({
+    year: loaderData.year,
+    month: loaderData.month,
+    day: loaderData.day,
+  });
   const previousDay = urlDate.minus({ days: 1 });
   const nextDay = urlDate.plus({ days: 1 });
   const isToday = urlDate.equals(DateTime.now().startOf("day"));
@@ -100,19 +121,19 @@ export default function DailyLeaderboardPage({
         ) : null}
       </div>
       <div className="space-y-5 w-full max-w-screen-md mx-auto">
-        {Array.from({ length: 11 }).map((_, index) => (
+        {loaderData.products.map((product) => (
           <ProductCard
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentsCount={12}
-            viewsCount={12}
-            votesCount={120}
-            key={`productId-${index}`}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewsCount={product.views}
+            votesCount={product.upvotes}
+            key={`dailyLeaderboardCardId-${product.product_id}`}
           />
         ))}
       </div>
-      <ProductPagination totalPages={10} />
+      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }
