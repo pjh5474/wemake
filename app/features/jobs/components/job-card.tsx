@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Link } from "react-router";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
@@ -10,27 +11,27 @@ import {
 } from "~/common/components/ui/card";
 
 interface JobCardProps {
-  id: string;
+  id: number;
   company: string;
-  companyLogoUrl: string;
-  companyHq: string;
-  timeAgo: string;
-  title: string;
-  type: string;
-  positionLocation: string;
-  salary: string;
+  companyLogo: string;
+  companyLocation: string;
+  createdAt: string;
+  overview: string;
+  jobType: string;
+  locationType: string;
+  salaryRange: string;
 }
 
 export function JobCard({
   id,
   company,
-  companyLogoUrl,
-  companyHq,
-  timeAgo,
-  title,
-  type,
-  positionLocation,
-  salary,
+  companyLogo,
+  companyLocation,
+  createdAt,
+  overview,
+  jobType,
+  locationType,
+  salaryRange,
 }: JobCardProps) {
   return (
     <Link to={`/jobs/${id}`}>
@@ -38,28 +39,30 @@ export function JobCard({
         <CardHeader>
           <div className="flex items-center gap-4 mb-4">
             <img
-              src={companyLogoUrl}
+              src={companyLogo}
               alt={`${company} logo`}
               className="size-12 rounded-full"
             />
             <div className="space-x-2">
               <span className="text-accent-foreground">{company}</span>
-              <span className="text-xs text-muted-foreground">{timeAgo}</span>
+              <span className="text-xs text-muted-foreground">
+                {DateTime.fromISO(createdAt).toRelative()}
+              </span>
             </div>
           </div>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>{overview}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Badge variant="outline">{type}</Badge>
-          <Badge variant="outline">{positionLocation}</Badge>
+          <Badge variant="outline">{jobType}</Badge>
+          <Badge variant="outline">{locationType}</Badge>
         </CardContent>
         <CardFooter className="flex justify-between">
           <div className="flex flex-col">
             <span className="text-sm font-medium text-muted-foreground">
-              {salary}
+              {salaryRange}
             </span>
             <span className="text-xs font-medium text-muted-foreground">
-              {companyHq}
+              {companyLocation}
             </span>
           </div>
           <Button variant="secondary" size="sm">
