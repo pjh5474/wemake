@@ -32,9 +32,9 @@ export default function SubmitPostPage() {
           required
         />
         <SelectPair
-          label="Category"
-          name="category"
-          description="Select a category"
+          label="Topic"
+          name="topic"
+          description="Select a topic"
           placeholder="i.e Productivity"
           required
           options={[

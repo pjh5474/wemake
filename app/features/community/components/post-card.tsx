@@ -20,7 +20,7 @@ interface PostCardProps {
   title: string;
   author: string;
   authorAvatarUrl: string | null;
-  category: string;
+  topic: string;
   createdAt: string;
   expanded?: boolean;
   votesCount?: number;
@@ -31,7 +31,7 @@ export function PostCard({
   title,
   author,
   authorAvatarUrl,
-  category,
+  topic,
   createdAt,
   expanded = false,
   votesCount = 0,
@@ -53,7 +53,7 @@ export function PostCard({
             <CardTitle>{title}</CardTitle>
             <div className="flex gap-2 text-sm leading-tight text-muted-foreground">
               <span>{author} on</span>
-              <span>{category}</span>
+              <span>{topic}</span>
               <DotIcon className="size-4" />
               <span>{DateTime.fromISO(createdAt).toRelative()}</span>
             </div>

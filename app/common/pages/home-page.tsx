@@ -8,6 +8,7 @@ import { TeamCard } from "~/features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { DateTime } from "luxon";
+import { getPosts } from "~/features/community/queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -22,7 +23,11 @@ export const loader = async () => {
     endDate: DateTime.now().endOf("day"),
     limit: 7,
   });
-  return { products };
+  const posts = await getPosts({
+    limit: 7,
+    sorting: "newest",
+  });
+  return { products, posts };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -64,15 +69,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
             <Link to="/community">Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 11 }).map((_, index) => (
+        {loaderData.posts.map((post) => (
           <PostCard
-            id={index}
-            title={`Discussion Title ${index}`}
-            author="Nico"
-            authorAvatarUrl="https://github.com/shadcn.png"
-            category="Productivity"
-            createdAt={new Date().toISOString()}
-            key={`postId-${index}`}
+            id={post.post_id}
+            title={post.title}
+            author={post.author}
+            authorAvatarUrl={post.author_avatar}
+            topic={post.topic}
+            createdAt={post.created_at}
+            key={`postCardId-${post.post_id}`}
           />
         ))}
       </div>

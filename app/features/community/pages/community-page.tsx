@@ -1,6 +1,6 @@
 import { Hero } from "~/common/components/hero";
 import type { Route } from "./+types/community-page";
-import { Await, Form, Link, useSearchParams } from "react-router";
+import { Await, data, Form, Link, useSearchParams } from "react-router";
 import { Button } from "~/common/components/ui/button";
 import {
   DropdownMenu,
@@ -9,11 +9,22 @@ import {
   DropdownMenuTrigger,
 } from "~/common/components/ui/dropdown-menu";
 import { ChevronDownIcon } from "lucide-react";
-import { PERIOD_OPTIONS, SORT_OPTIONS } from "../constants";
+import {
+  COMMUNITY_SORTING_PERIOD_OPTIONS,
+  COMMUNITY_SORTING_OPTIONS,
+} from "../constants";
 import { Input } from "~/common/components/ui/input";
 import { PostCard } from "../components/post-card";
 import { getPosts, getTopics } from "../queries";
 import { Suspense } from "react";
+import { z } from "zod";
+
+const searchParamsSchema = z.object({
+  sorting: z.enum(COMMUNITY_SORTING_OPTIONS).optional().default("newest"),
+  period: z.enum(COMMUNITY_SORTING_PERIOD_OPTIONS).optional().default("all"),
+  keyword: z.string().optional(),
+  topic: z.string().optional(),
+});
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -22,14 +33,30 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   // await new Promise((resolve) => setTimeout(resolve, 5000));
   // const topics = await getTopics();
   // const posts = await getPosts();
   // const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
 
+  const url = new URL(request.url);
+  const { success: searchParamsParseSuccess, data: parsedSearchParams } =
+    searchParamsSchema.safeParse(Object.fromEntries(url.searchParams));
+  if (!searchParamsParseSuccess) {
+    throw data(
+      { error_code: "INVALID_SEARCH_PARAMS", message: "Invalid search params" },
+      { status: 400 }
+    );
+  }
+
   const topics = getTopics();
-  const posts = getPosts();
+  const posts = getPosts({
+    limit: 10,
+    sorting: parsedSearchParams.sorting,
+    period: parsedSearchParams.period,
+    keyword: parsedSearchParams.keyword,
+    topic: parsedSearchParams.topic,
+  });
   return { topics, posts };
 };
 
@@ -64,7 +91,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                     <ChevronDownIcon className="size-5" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    {SORT_OPTIONS.map((option) => (
+                    {COMMUNITY_SORTING_OPTIONS.map((option) => (
                       <DropdownMenuCheckboxItem
                         key={option}
                         className="capitalize cursor-pointer"
@@ -87,7 +114,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                       <ChevronDownIcon className="size-5" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      {PERIOD_OPTIONS.map((option) => (
+                      {COMMUNITY_SORTING_PERIOD_OPTIONS.map((option) => (
                         <DropdownMenuCheckboxItem
                           key={option}
                           className="capitalize cursor-pointer"
@@ -106,7 +133,21 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 )}
               </div>
               <Form className="w-2/3">
-                <Input type="text" placeholder="Search for dicussions" />
+                {/* 
+                // TODO: add hidden inputs for sorting and period
+                <Input type="hidden" name="sorting" value={sorting} />
+                <Input type="hidden" name="period" value={period} />
+                 */}
+                <Input
+                  type="hidden"
+                  name="topic"
+                  value={searchParams.get("topic") || ""}
+                />
+                <Input
+                  type="text"
+                  name="keyword"
+                  placeholder="Search for dicussions"
+                />
               </Form>
             </div>
             <Button asChild>
@@ -120,11 +161,11 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                   {data.map((post) => (
                     <PostCard
                       id={post.post_id}
-                      key={post.post_id}
+                      key={`postCardId-${post.post_id}`}
                       title={post.title}
                       author={post.author}
                       authorAvatarUrl={post.author_avatar}
-                      category={post.topic}
+                      topic={post.topic}
                       votesCount={post.upvotes}
                       createdAt={post.created_at}
                       expanded
