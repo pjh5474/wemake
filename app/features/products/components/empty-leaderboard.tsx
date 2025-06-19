@@ -1,8 +1,12 @@
+import { Link } from "react-router";
+import { Button } from "~/common/components/ui/button";
+
 interface EmptyLeaderboardProps {
   title: string;
   description: string;
   emptyMessage: string;
   emptyDescription: string;
+  linkTo?: string;
 }
 
 export function EmptyLeaderboard({
@@ -10,6 +14,7 @@ export function EmptyLeaderboard({
   description,
   emptyMessage,
   emptyDescription,
+  linkTo,
 }: EmptyLeaderboardProps) {
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -25,6 +30,11 @@ export function EmptyLeaderboard({
           <p className="text-muted-foreground">{emptyDescription}</p>
         </div>
       </div>
+      {linkTo && (
+        <Button variant="link" asChild className="text-lg self-center">
+          <Link to={linkTo}>Explore another products &rarr;</Link>
+        </Button>
+      )}
     </div>
   );
 }

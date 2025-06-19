@@ -8,6 +8,7 @@ import { Button } from "~/common/components/ui/button";
 import ProductPagination from "~/common/components/product-pagination";
 import { getProductPagesByDateRange, getProductsByDateRange } from "../queries";
 import { LEADERBOARD_PAGE_SIZE } from "../constants";
+import { EmptyLeaderboard } from "../components/empty-leaderboard";
 
 const paramsSchema = z.object({
   year: z.coerce.number().int(),
@@ -133,19 +134,30 @@ export default function WeeklyLeaderboardPage({
         ) : null}
       </div>
       <div className="space-y-5 w-full max-w-screen-md mx-auto">
-        {loaderData.products.map((product) => (
-          <ProductCard
-            id={product.product_id.toString()}
-            name={product.name}
-            description={product.description}
-            reviewsCount={product.reviews}
-            viewsCount={product.views}
-            votesCount={product.upvotes}
-            key={`dailyLeaderboardCardId-${product.product_id}`}
+        {loaderData.products.length === 0 ? (
+          <EmptyLeaderboard
+            title=""
+            description=""
+            emptyMessage="😔 There is no product for this week."
+            emptyDescription="How about checking another week?"
           />
-        ))}
+        ) : (
+          loaderData.products.map((product) => (
+            <ProductCard
+              id={product.product_id.toString()}
+              name={product.name}
+              description={product.description}
+              reviewsCount={product.reviews}
+              viewsCount={product.views}
+              votesCount={product.upvotes}
+              key={`dailyLeaderboardCardId-${product.product_id}`}
+            />
+          ))
+        )}
       </div>
-      <ProductPagination totalPages={loaderData.totalPages} />
+      {loaderData.products.length > 0 && (
+        <ProductPagination totalPages={loaderData.totalPages} />
+      )}
     </div>
   );
 }

@@ -17,6 +17,7 @@ interface LeaderboardGridProps {
   products: Product[];
   linkTo: string;
   keyPrefix: string;
+  buttonText: string;
 }
 
 export function LeaderboardGrid({
@@ -25,6 +26,7 @@ export function LeaderboardGrid({
   products,
   linkTo,
   keyPrefix,
+  buttonText,
 }: LeaderboardGridProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -46,7 +48,7 @@ export function LeaderboardGrid({
         />
       ))}
       <Button variant="link" asChild className="text-lg self-center">
-        <Link to={linkTo}>Explore all products &rarr;</Link>
+        <Link to={linkTo}>{buttonText} &rarr;</Link>
       </Button>
     </div>
   );

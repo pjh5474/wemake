@@ -56,6 +56,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           description="The most popular products on wemake by day."
           emptyMessage="No products found"
           emptyDescription="There are no products for today."
+          linkTo="/products/leaderboards/daily"
         />
       ) : (
         <LeaderboardGrid
@@ -64,6 +65,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           products={loaderData.dailyProducts}
           linkTo="/products/leaderboards/daily"
           keyPrefix="dailyProductCardId"
+          buttonText="Explore all products by day"
         />
       )}
 
@@ -73,6 +75,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           description="The most popular products on wemake by week."
           emptyMessage="No products found"
           emptyDescription="There are no products for this week."
+          linkTo="/products/leaderboards/weekly"
         />
       ) : (
         <LeaderboardGrid
@@ -81,6 +84,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           products={loaderData.weeklyProducts}
           linkTo="/products/leaderboards/weekly"
           keyPrefix="weeklyProductCardId"
+          buttonText="Explore all products by week"
         />
       )}
 
@@ -90,6 +94,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           description="The most popular products on wemake by month."
           emptyMessage="No products found"
           emptyDescription="There are no products for this month."
+          linkTo="/products/leaderboards/monthly"
         />
       ) : (
         <LeaderboardGrid
@@ -98,6 +103,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           products={loaderData.monthlyProducts}
           linkTo="/products/leaderboards/monthly"
           keyPrefix="monthlyProductCardId"
+          buttonText="Explore all products by month"
         />
       )}
 
@@ -107,6 +113,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           description="The most popular products on wemake by year."
           emptyMessage="No products found"
           emptyDescription="There are no products for this year."
+          linkTo="/products/leaderboards/yearly"
         />
       ) : (
         <LeaderboardGrid
@@ -115,6 +122,7 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
           products={loaderData.yearlyProducts}
           linkTo="/products/leaderboards/yearly"
           keyPrefix="yearlyProductCardId"
+          buttonText="Explore all products by year"
         />
       )}
     </div>
