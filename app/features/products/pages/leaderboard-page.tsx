@@ -1,7 +1,6 @@
-import { Link } from "react-router";
 import { Hero } from "~/common/components/hero";
-import { ProductCard } from "../components/product-card";
-import { Button } from "~/common/components/ui/button";
+import { EmptyLeaderboard } from "../components/empty-leaderboard";
+import { LeaderboardGrid } from "../components/leaderboard-grid";
 import type { Route } from "./+types/leaderboard-page";
 import { getProductsByDateRange } from "../queries";
 import { DateTime } from "luxon";
@@ -50,110 +49,74 @@ export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
         title="Leaderboards"
         subtitle="The most popular products on wemake"
       />
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight">
-            Daily Leaderboard
-          </h2>
-          <p className="text-xl font-light text-foreground">
-            The most popular products on wemake by day.
-          </p>
-        </div>
-        {loaderData.dailyProducts.map((product) => (
-          <ProductCard
-            id={product.product_id.toString()}
-            name={product.name}
-            description={product.description}
-            reviewsCount={product.reviews}
-            viewsCount={product.views}
-            votesCount={product.upvotes}
-            key={`dailyProductCardId-${product.product_id}`}
-          />
-        ))}
-        <Button variant="link" asChild className="text-lg self-center">
-          <Link to="/products/leaderboards/daily">
-            Explore all products &rarr;
-          </Link>
-        </Button>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight">
-            Weekly Leaderboard
-          </h2>
-          <p className="text-xl font-light text-foreground">
-            The most popular products on wemake by week.
-          </p>
-        </div>
-        {loaderData.weeklyProducts.map((product) => (
-          <ProductCard
-            id={product.product_id.toString()}
-            name={product.name}
-            description={product.description}
-            reviewsCount={product.reviews}
-            viewsCount={product.views}
-            votesCount={product.upvotes}
-            key={`weeklyProductCardId-${product.product_id}`}
-          />
-        ))}
-        <Button variant="link" asChild className="text-lg self-center">
-          <Link to="/products/leaderboards/weekly">
-            Explore all products &rarr;
-          </Link>
-        </Button>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight">
-            Monthly Leaderboard
-          </h2>
-          <p className="text-xl font-light text-foreground">
-            The most popular products on wemake by month.
-          </p>
-        </div>
-        {loaderData.monthlyProducts.map((product) => (
-          <ProductCard
-            id={product.product_id.toString()}
-            name={product.name}
-            description={product.description}
-            reviewsCount={product.reviews}
-            viewsCount={product.views}
-            votesCount={product.upvotes}
-            key={`monthlyProductCardId-${product.product_id}`}
-          />
-        ))}
-        <Button variant="link" asChild className="text-lg self-center">
-          <Link to="/products/leaderboards/monthly">
-            Explore all products &rarr;
-          </Link>
-        </Button>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight">
-            Yearly Leaderboard
-          </h2>
-          <p className="text-xl font-light text-foreground">
-            The most popular products on wemake by year.
-          </p>
-        </div>
-        {loaderData.yearlyProducts.map((product) => (
-          <ProductCard
-            id={product.product_id.toString()}
-            name={product.name}
-            description={product.description}
-            reviewsCount={product.reviews}
-            viewsCount={product.views}
-            votesCount={product.upvotes}
-            key={`yearlyProductCardId-${product.product_id}`}
-          />
-        ))}
-        <Button variant="link" asChild className="text-lg self-center">
-          <Link to="/products/leaderboards/yearly">
-            Explore all products &rarr;
-          </Link>
-        </Button>
-      </div>
+
+      {loaderData.dailyProducts.length === 0 ? (
+        <EmptyLeaderboard
+          title="Daily Leaderboard"
+          description="The most popular products on wemake by day."
+          emptyMessage="No products found"
+          emptyDescription="There are no products for today."
+        />
+      ) : (
+        <LeaderboardGrid
+          title="Daily Leaderboard"
+          description="The most popular products on wemake by day."
+          products={loaderData.dailyProducts}
+          linkTo="/products/leaderboards/daily"
+          keyPrefix="dailyProductCardId"
+        />
+      )}
+
+      {loaderData.weeklyProducts.length === 0 ? (
+        <EmptyLeaderboard
+          title="Weekly Leaderboard"
+          description="The most popular products on wemake by week."
+          emptyMessage="No products found"
+          emptyDescription="There are no products for this week."
+        />
+      ) : (
+        <LeaderboardGrid
+          title="Weekly Leaderboard"
+          description="The most popular products on wemake by week."
+          products={loaderData.weeklyProducts}
+          linkTo="/products/leaderboards/weekly"
+          keyPrefix="weeklyProductCardId"
+        />
+      )}
+
+      {loaderData.monthlyProducts.length === 0 ? (
+        <EmptyLeaderboard
+          title="Monthly Leaderboard"
+          description="The most popular products on wemake by month."
+          emptyMessage="No products found"
+          emptyDescription="There are no products for this month."
+        />
+      ) : (
+        <LeaderboardGrid
+          title="Monthly Leaderboard"
+          description="The most popular products on wemake by month."
+          products={loaderData.monthlyProducts}
+          linkTo="/products/leaderboards/monthly"
+          keyPrefix="monthlyProductCardId"
+        />
+      )}
+
+      {loaderData.yearlyProducts.length === 0 ? (
+        <EmptyLeaderboard
+          title="Yearly Leaderboard"
+          description="The most popular products on wemake by year."
+          emptyMessage="No products found"
+          emptyDescription="There are no products for this year."
+        />
+      ) : (
+        <LeaderboardGrid
+          title="Yearly Leaderboard"
+          description="The most popular products on wemake by year."
+          products={loaderData.yearlyProducts}
+          linkTo="/products/leaderboards/yearly"
+          keyPrefix="yearlyProductCardId"
+        />
+      )}
     </div>
   );
 }

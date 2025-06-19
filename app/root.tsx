@@ -40,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="min-w-sm">
         <main>{children}</main>
         <ScrollRestoration />
         <Scripts />

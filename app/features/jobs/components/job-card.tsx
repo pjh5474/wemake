@@ -35,8 +35,8 @@ export function JobCard({
 }: JobCardProps) {
   return (
     <Link to={`/jobs/${id}`}>
-      <Card className="bg-transparent hover:bg-card/50 transition-colors">
-        <CardHeader>
+      <Card className="bg-transparent hover:bg-card/50 transition-colors flex flex-col h-full">
+        <CardHeader className="mt-auto h-full">
           <div className="flex items-center gap-4 mb-4">
             <img
               src={companyLogo}
@@ -50,11 +50,15 @@ export function JobCard({
               </span>
             </div>
           </div>
-          <CardTitle>{overview}</CardTitle>
+          <CardTitle className="mt-auto">{overview}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Badge variant="outline">{jobType}</Badge>
-          <Badge variant="outline">{locationType}</Badge>
+          <Badge variant="outline" className="uppercase">
+            {jobType}
+          </Badge>
+          <Badge variant="outline" className="uppercase">
+            {locationType}
+          </Badge>
         </CardContent>
         <CardFooter className="flex justify-between">
           <div className="flex flex-col">

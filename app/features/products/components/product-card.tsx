@@ -28,8 +28,8 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Link to={`/products/${id}`} className="block">
-      <Card className="w-full flex flex-row items-center justify-between p-4 bg-transparent  hover:bg-card/50">
-        <CardHeader className="w-full">
+      <Card className="w-full flex flex-row items-end justify-between p-4 bg-transparent  hover:bg-card/50 h-full">
+        <CardHeader className="w-full h-full mt-auto">
           <CardTitle>{name}</CardTitle>
           <CardDescription className="text-muted-foreground">
             {description}
@@ -45,7 +45,7 @@ export function ProductCard({
             </div>
           </div>
         </CardHeader>
-        <CardFooter className="py-0">
+        <CardFooter className="py-0 h-full mt-auto">
           <Button variant="outline" className="flex flex-col h-14">
             <ChevronUpIcon className="size-4 shrink-0" />
             <span>{votesCount}</span>
