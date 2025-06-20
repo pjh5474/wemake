@@ -4,11 +4,12 @@ import {
   AvatarImage,
 } from "~/common/components/ui/avatar";
 import { StarIcon } from "lucide-react";
+import { DateTime } from "luxon";
 
 interface ReviewCardProps {
   username: string;
   displayName: string;
-  avatarUrl?: string;
+  avatarUrl: string | null;
   rating: number;
   content: string;
   createdAt: string;
@@ -40,7 +41,9 @@ export function ReviewCard({
         ))}
       </div>
       <p className="text-muted-foreground">{content}</p>
-      <span className="text-xs text-muted-foreground">{createdAt}</span>
+      <span className="text-xs text-muted-foreground">
+        {DateTime.fromISO(createdAt).toRelative()}
+      </span>
     </div>
   );
 }

@@ -105,6 +105,7 @@ export default function ProductOverviewLayout({
           context={{
             productDescription: loaderData.product.description,
             productHowItWorks: loaderData.product.how_it_works,
+            reviewCount: loaderData.product.reviews,
           }}
         />
       </div>
