@@ -46,7 +46,6 @@ export const getTeamById = async ({ team_id }: { team_id: number }) => {
     .single();
 
   if (error) {
-    console.log(error);
     throw new Error(error.message);
   }
   return data;

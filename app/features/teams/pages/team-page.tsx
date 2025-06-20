@@ -7,7 +7,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/common/components/ui/avatar";
-import { data, Form, useParams } from "react-router";
+import { data, Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import {
   Card,
@@ -18,20 +18,20 @@ import {
 import z from "zod";
 import { getTeamById } from "../queries";
 
-const searchParamsSchema = z.object({
+const paramsSchema = z.object({
   teamId: z.string().transform((val) => parseInt(val)),
 });
 
-export const meta: Route.MetaFunction = () => {
+export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
   return [
-    { title: "Team Details | wemake" },
+    { title: `${data?.team.product_name} | wemake` },
     { name: "description", content: "View team details and information" },
   ];
 };
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const { teamId } = params;
-  const { success, data: parsedData } = searchParamsSchema.safeParse({
+  const { success, data: parsedData } = paramsSchema.safeParse({
     teamId,
   });
   if (!success) {
@@ -75,7 +75,7 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {item.title}
                 </CardTitle>
-                <CardContent className="p-0 font-bold text-2xl">
+                <CardContent className="p-0 font-bold text-2xl capitalize">
                   <p>{item.value}</p>
                 </CardContent>
               </CardHeader>
@@ -87,7 +87,7 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
                 Looking for
               </CardTitle>
               <CardContent className="p-0 font-bold text-2xl">
-                <ul className="text-lg list-disc list-inside">
+                <ul className="text-lg list-disc list-inside capitalize">
                   {loaderData.team.roles.split(",").map((role) => (
                     <li key={role}>{role}</li>
                   ))}

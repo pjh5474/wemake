@@ -1,14 +1,10 @@
 import { data, Outlet } from "react-router";
-import { z } from "zod";
 import type { Route } from "./+types/leaderboard-layout";
-
-const searchParamsSchema = z.object({
-  page: z.coerce.number().min(1).optional().default(1),
-});
+import { paginationValidationSchema } from "~/common/utils/pagination-validation-schema";
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
-  const { success: pageParseSuccess } = searchParamsSchema.safeParse(
+  const { success: pageParseSuccess } = paginationValidationSchema.safeParse(
     Object.fromEntries(url.searchParams)
   );
   if (!pageParseSuccess) {

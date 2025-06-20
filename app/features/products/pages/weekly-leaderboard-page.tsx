@@ -144,7 +144,7 @@ export default function WeeklyLeaderboardPage({
         ) : (
           loaderData.products.map((product) => (
             <ProductCard
-              id={product.product_id.toString()}
+              id={product.product_id}
               name={product.name}
               description={product.description}
               reviewsCount={product.reviews}
