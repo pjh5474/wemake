@@ -120,7 +120,7 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
               <h4 className="text-lg font-medium">
                 {loaderData.team.team_leader.username}
               </h4>
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="capitalize">
                 {loaderData.team.team_leader.role}
               </Badge>
             </div>

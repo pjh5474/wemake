@@ -33,6 +33,15 @@ type Database = MergeDeep<
             SupabaseDatabase["public"]["Views"]["product_overview_view"]["Row"]
           >;
         };
+        community_post_detail_view: {
+          Row: SetFieldType<
+            SetNonNullable<
+              SupabaseDatabase["public"]["Views"]["community_post_detail_view"]["Row"]
+            >,
+            "author_avatar",
+            string | null
+          >;
+        };
       };
     };
   }

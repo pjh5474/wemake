@@ -17,17 +17,31 @@ import {
 } from "~/common/components/ui/avatar";
 import { Badge } from "~/common/components/ui/badge";
 import { Reply } from "../components/reply";
+import { getPostById } from "../queries";
+import z from "zod";
+import { DateTime } from "luxon";
 
-export const meta: Route.MetaFunction = () => {
+const paramsSchema = z.object({
+  postId: z.string().transform((val) => parseInt(val)),
+});
+
+export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
   return [
-    { title: "Post | wemake" },
+    { title: `${data?.post.title} | wemake` },
     { name: "description", content: "wemake Community Post" },
   ];
 };
 
-export default function PostPage() {
-  const { postId } = useParams();
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const { success, data: parsedParams } = paramsSchema.safeParse(params);
+  if (!success) {
+    throw new Error("Invalid post ID");
+  }
+  const post = await getPostById({ post_id: parsedParams.postId });
+  return { post };
+};
 
+export default function PostPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-10">
       <Breadcrumb>
@@ -40,14 +54,16 @@ export default function PostPage() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/community?topic=productivity">Productivity</Link>
+              <Link to={`/community?topic=${loaderData.post.topic_slug}`}>
+                {loaderData.post.topic_name}
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to={`/community/${postId}`}>
-                What is the best productivity tool?
+              <Link to={`/community/${loaderData.post.post_id}`}>
+                {loaderData.post.title}
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -66,26 +82,25 @@ export default function PostPage() {
                   What is the best productivity tool?
                 </h2>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>@Nico </span>
+                  <span>@{loaderData.post.author_name} </span>
                   <DotIcon className="size-5" />
-                  <span>12 hours ago</span>
+                  <span>
+                    {DateTime.fromISO(loaderData.post.created_at).toRelative()}
+                  </span>
                   <DotIcon className="size-5" />
-                  <span>10 replies</span>
+                  <span>
+                    {loaderData.post.replies_count}{" "}
+                    {loaderData.post.replies_count === 1 ? "reply" : "replies"}
+                  </span>
                 </div>
                 <p className="text-muted-foreground w-3/4">
-                  생산성 도구를 찾고 있는데, 현재 여러 가지 옵션들이 있어서 어떤
-                  것을 선택해야 할지 고민이 됩니다. Notion, Trello, Asana 등
-                  다양한 도구들이 있는데, 각각의 장단점이 있어서 결정하기가
-                  어렵네요. 특히 일정 관리, 할 일 목록, 문서 작성, 협업 기능
-                  등이 잘 통합된 도구를 찾고 있습니다. 여러분의 경험과 추천을
-                  듣고 싶습니다. 어떤 도구를 사용하시나요? 그리고 그 도구의 어떤
-                  점이 특히 좋으신가요?
+                  {loaderData.post.content}
                 </p>
               </div>
               <Form className="flex items-start gap-5 w-3/4">
                 <Avatar className="size-14">
-                  <AvatarImage src="https://github.com/apple.png" />
-                  <AvatarFallback>N</AvatarFallback>
+                  <AvatarImage src="https://github.com/microsoft.png" />
+                  <AvatarFallback>{"N"}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-5 w-full items-end">
                   <Textarea
@@ -97,7 +112,10 @@ export default function PostPage() {
                 </div>
               </Form>
               <div className="space-y-10">
-                <h4 className="font-semibold">10 Replies</h4>
+                <h4 className="font-semibold">
+                  {loaderData.post.replies_count}{" "}
+                  {loaderData.post.replies_count === 1 ? "reply" : "replies"}
+                </h4>
                 <div className="flex flex-col gap-5">
                   <Reply
                     avatarUrl="https://github.com/microsoft.png"
@@ -114,17 +132,30 @@ export default function PostPage() {
         <aside className="col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
           <div className="flex gap-5">
             <Avatar className="size-14">
-              <AvatarImage src="https://github.com/apple.png" />
-              <AvatarFallback>N</AvatarFallback>
+              {loaderData.post.author_avatar && (
+                <AvatarImage src={loaderData.post.author_avatar} />
+              )}
+              <AvatarFallback>
+                {loaderData.post.author_name[0].toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-              <h4 className="text-lg font-medium">Nicolas</h4>
-              <Badge variant="secondary">Entrepreneur</Badge>
+            <div className="flex flex-col items-start">
+              <h4 className="text-lg font-medium">
+                {loaderData.post.author_name}
+              </h4>
+              <Badge variant="secondary" className="capitalize">
+                {loaderData.post.author_role}
+              </Badge>
             </div>
           </div>
           <div className="text-sm flex flex-col gap-2">
-            <span>😾 Joined 3 month ago</span>
-            <span>🚀 Launched 10 products</span>
+            <span>
+              😾 Joined{" "}
+              {DateTime.fromISO(loaderData.post.author_created_at).toRelative()}
+            </span>
+            <span>
+              🚀 Launched {loaderData.post.author_products_count} products
+            </span>
           </div>
           <Button variant="outline" className="w-full">
             Follow

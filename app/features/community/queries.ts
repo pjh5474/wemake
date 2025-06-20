@@ -125,3 +125,13 @@ export const getPosts = async ({
   if (error) throw new Error(error.message);
   return data;
 };
+
+export const getPostById = async ({ post_id }: { post_id: number }) => {
+  const { data, error } = await supabaseClient
+    .from("community_post_detail_view")
+    .select("*")
+    .eq("post_id", post_id)
+    .single();
+  if (error) throw new Error(error.message);
+  return data;
+};
