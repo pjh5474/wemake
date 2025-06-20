@@ -4,7 +4,6 @@ import { getUserPostsByUsername } from "../queries";
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const posts = await getUserPostsByUsername(params.username);
-  console.log(posts);
   return { posts };
 };
 
