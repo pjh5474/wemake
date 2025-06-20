@@ -612,18 +612,18 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_products_to_profiles"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+          {
             foreignKeyName: "products_category_id_categories_category_id_fk"
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["category_id"]
-          },
-          {
-            foreignKeyName: "products_profile_id_profiles_profile_id_fk"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["profile_id"]
           },
         ]
       }

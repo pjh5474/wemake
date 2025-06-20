@@ -16,18 +16,36 @@ import {
 } from "~/common/components/ui/dialog";
 import { Textarea } from "~/common/components/ui/textarea";
 import { cn } from "~/lib/utils";
+import type { Route } from "./+types/profile-layout";
+import { getUserProfileByUsername } from "../queries";
 
-export default function ProfileLayout() {
+export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
+  return [
+    { title: `${data?.user.name} | wemake` },
+    { name: "description", content: data?.user.headline },
+  ];
+};
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const user = await getUserProfileByUsername(params.username);
+  return { user };
+};
+
+export default function ProfileLayout({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-10">
       <div className="flex items-center gap-4">
         <Avatar className="size-40">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>N</AvatarFallback>
+          {loaderData.user.avatar && (
+            <AvatarImage src={loaderData.user.avatar} />
+          )}
+          <AvatarFallback className="text-2xl font-bold">
+            {loaderData.user.name[0].toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <div className="space-y-5">
           <div className="flex gap-2">
-            <h1 className="text-2xl font-semibold">Jane Doe</h1>
+            <h1 className="text-2xl font-semibold">{loaderData.user.name}</h1>
             <Button variant="outline" asChild>
               <Link to="/my/settings">Edit profile</Link>
             </Button>
@@ -42,7 +60,7 @@ export default function ProfileLayout() {
                 </DialogHeader>
                 <DialogDescription className="space-y-4">
                   <span className="text-sm text-muted-foreground block">
-                    Send a message to Jane Doe
+                    Send a message to {loaderData.user.name}
                   </span>
                   <Form className="space-y-4">
                     <Textarea
@@ -57,8 +75,10 @@ export default function ProfileLayout() {
             </Dialog>
           </div>
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-muted-foreground">@jane_doe</span>
-            <Badge variant="secondary">Product Designer</Badge>
+            <span className="text-sm text-muted-foreground">
+              @{loaderData.user.username}
+            </span>
+            <Badge variant="secondary">{loaderData.user.role}</Badge>
             <Badge variant="secondary">100 followers</Badge>
             <Badge variant="secondary">100 following</Badge>
           </div>
@@ -66,9 +86,12 @@ export default function ProfileLayout() {
       </div>
       <div className="flex gap-5">
         {[
-          { label: "About", to: "/users/username" },
-          { label: "Products", to: "/users/username/products" },
-          { label: "Posts", to: "/users/username/posts" },
+          { label: "About", to: `/users/${loaderData.user.username}` },
+          {
+            label: "Products",
+            to: `/users/${loaderData.user.username}/products`,
+          },
+          { label: "Posts", to: `/users/${loaderData.user.username}/posts` },
         ].map((item) => (
           <NavLink
             key={item.label}
@@ -86,7 +109,12 @@ export default function ProfileLayout() {
         ))}
       </div>
       <div className="max-w-screen-md">
-        <Outlet />
+        <Outlet
+          context={{
+            headline: loaderData.user.headline,
+            bio: loaderData.user.bio,
+          }}
+        />
       </div>
     </div>
   );

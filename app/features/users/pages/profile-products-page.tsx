@@ -1,28 +1,27 @@
-import { useParams } from "react-router";
 import type { Route } from "./+types/profile-products-page";
 import { ProductCard } from "~/features/products/components/product-card";
 
-export const meta: Route.MetaFunction = () => {
-  return [
-    { title: "Profile Products | wemake" },
-    { name: "description", content: "View user's products" },
-  ];
+import { getUserProductsByUsername } from "../queries";
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const products = await getUserProductsByUsername(params.username);
+  return { products };
 };
 
-export default function ProfileProductsPage() {
-  const { username } = useParams();
-
+export default function ProfileProductsPage({
+  loaderData,
+}: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 5 }).map((_, index) => (
+      {loaderData.products.map((product) => (
         <ProductCard
-          id={index}
-          name="Product Name"
-          tagline="Product Tagline"
-          reviewsCount="12"
-          viewsCount="12"
-          votesCount="120"
-          key={`productId-${index}`}
+          id={product.product_id}
+          name={product.name}
+          tagline={product.tagline}
+          reviewsCount={product.reviews}
+          viewsCount={product.views}
+          votesCount={product.upvotes}
+          key={`productId-${product.product_id}`}
         />
       ))}
     </div>
