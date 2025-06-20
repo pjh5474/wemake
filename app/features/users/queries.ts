@@ -38,9 +38,9 @@ export const getUserProductsByUsername = async (username: string) => {
 
 export const getUserPostsByUsername = async (username: string) => {
   const { data, error } = await supabaseClient
-    .from("posts")
+    .from("community_post_list_view")
     .select("*")
-    .eq("username", username);
+    .eq("author_username", username);
   if (error) throw new Error(error.message);
   return data;
 };

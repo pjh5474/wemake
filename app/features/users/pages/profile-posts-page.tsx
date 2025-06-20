@@ -1,28 +1,25 @@
-import { useParams } from "react-router";
 import type { Route } from "./+types/profile-posts-page";
 import { PostCard } from "~/features/community/components/post-card";
+import { getUserPostsByUsername } from "../queries";
 
-export const meta: Route.MetaFunction = () => {
-  return [
-    { title: "Profile Posts | wemake" },
-    { name: "description", content: "View user's posts" },
-  ];
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const posts = await getUserPostsByUsername(params.username);
+  console.log(posts);
+  return { posts };
 };
 
-export default function ProfilePostsPage() {
-  const { username } = useParams();
-
+export default function ProfilePostsPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 5 }).map((_, index) => (
+      {loaderData.posts.map((post) => (
         <PostCard
-          id={index}
-          title={`Discussion Title ${index}`}
-          author="Nico"
-          authorAvatarUrl="https://github.com/shadcn.png"
-          topic="Productivity"
-          createdAt={new Date().toISOString()}
-          key={index}
+          id={post.post_id}
+          title={post.title}
+          author={post.author_username}
+          authorAvatarUrl={post.author_avatar}
+          topic={post.topic}
+          createdAt={post.created_at}
+          key={post.post_id}
           expanded
         />
       ))}
