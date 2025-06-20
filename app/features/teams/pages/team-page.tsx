@@ -7,7 +7,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/common/components/ui/avatar";
-import { Form } from "react-router";
+import { data, Form, useParams } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import {
   Card,
@@ -15,6 +15,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/common/components/ui/card";
+import z from "zod";
+import { getTeamById } from "../queries";
+
+const searchParamsSchema = z.object({
+  teamId: z.string().transform((val) => parseInt(val)),
+});
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -23,28 +29,45 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export default function TeamPage() {
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const { teamId } = params;
+  const { success, data: parsedData } = searchParamsSchema.safeParse({
+    teamId,
+  });
+  if (!success) {
+    throw data(
+      { error_code: "INVALID_SEARCH_PARAMS", message: "Invalid search params" },
+      { status: 400 }
+    );
+  }
+  const team = await getTeamById({
+    team_id: parsedData.teamId,
+  });
+  return { team };
+};
+
+export default function TeamPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-20">
-      <Hero title="Join lynn's team" />
-      <div className="grid grid-cols-6 gap-40 items-start">
-        <div className="col-span-4 grid grid-cols-4 gap-5">
+      <Hero title={`Join ${loaderData.team.team_leader.username}'s team`} />
+      <div className="grid grid-cols-1 xl:grid-cols-6 gap-10 xl:gap-40 items-start">
+        <div className="col-span-1 xl:col-span-4 grid grid-cols-2 xl:grid-cols-4 gap-5">
           {[
             {
               title: "Product Name",
-              value: "Doggy Social",
+              value: loaderData.team.product_name,
             },
             {
               title: "Stage",
-              value: "MVP",
+              value: loaderData.team.product_stage,
             },
             {
               title: "Team size",
-              value: "10",
+              value: loaderData.team.team_size,
             },
             {
               title: "Available Equity",
-              value: "50",
+              value: loaderData.team.equity_split,
             },
           ].map((item) => (
             <Card key={item.title}>
@@ -58,49 +81,48 @@ export default function TeamPage() {
               </CardHeader>
             </Card>
           ))}
-          <Card className="col-span-2">
+          <Card className="col-span-1 xl:col-span-2">
             <CardHeader>
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Looking for
               </CardTitle>
               <CardContent className="p-0 font-bold text-2xl">
                 <ul className="text-lg list-disc list-inside">
-                  {[
-                    "React Developer",
-                    "Backend Developer",
-                    "Product Manager",
-                    "UI/UX Designer",
-                  ].map((role) => (
+                  {loaderData.team.roles.split(",").map((role) => (
                     <li key={role}>{role}</li>
                   ))}
                 </ul>
               </CardContent>
             </CardHeader>
           </Card>
-          <Card className="col-span-2">
+          <Card className="col-span-1 xl:col-span-2">
             <CardHeader>
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Idea Description
               </CardTitle>
               <CardContent className="p-0 font-medium text-xl">
-                <p>
-                  We are building a social media platform for dogs. We are
-                  looking for a React Developer who is proficient in TypeScript
-                  and has experience with React Native.
-                </p>
+                <p>{loaderData.team.product_description}</p>
               </CardContent>
             </CardHeader>
           </Card>
         </div>
-        <aside className="col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
+        <aside className="col-span-1 xl:col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
           <div className="flex gap-5">
             <Avatar className="size-14">
-              <AvatarImage src="https://github.com/inthetiger.png" />
-              <AvatarFallback>N</AvatarFallback>
+              {loaderData.team.team_leader.avatar && (
+                <AvatarImage src={loaderData.team.team_leader.avatar} />
+              )}
+              <AvatarFallback>
+                {loaderData.team.team_leader.username[0]}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <h4 className="text-lg font-medium">Lynn</h4>
-              <Badge variant="secondary">Entrepreneur</Badge>
+              <h4 className="text-lg font-medium">
+                {loaderData.team.team_leader.username}
+              </h4>
+              <Badge variant="secondary">
+                {loaderData.team.team_leader.role}
+              </Badge>
             </div>
           </div>
           <Form className="space-y-5">

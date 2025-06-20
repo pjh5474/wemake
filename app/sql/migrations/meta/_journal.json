@@ -22,6 +22,20 @@
       "when": 1750301000481,
       "tag": "0002_magenta_anita_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750377145349,
+      "tag": "0003_windy_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750377241589,
+      "tag": "0004_orange_hellfire_club",
+      "breakpoints": true
     }
   ]
 }
