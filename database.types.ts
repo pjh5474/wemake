@@ -369,7 +369,7 @@ export type Database = {
         Row: {
           created_at: string
           parent_id: number | null
-          post_id: number
+          post_id: number | null
           post_reply_id: number
           profile_id: string
           reply: string
@@ -377,7 +377,7 @@ export type Database = {
         Insert: {
           created_at?: string
           parent_id?: number | null
-          post_id: number
+          post_id?: number | null
           post_reply_id?: never
           profile_id: string
           reply: string
@@ -385,7 +385,7 @@ export type Database = {
         Update: {
           created_at?: string
           parent_id?: number | null
-          post_id?: number
+          post_id?: number | null
           post_reply_id?: never
           profile_id?: string
           reply?: string

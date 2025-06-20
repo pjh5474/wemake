@@ -17,7 +17,7 @@ import {
 } from "~/common/components/ui/avatar";
 import { Badge } from "~/common/components/ui/badge";
 import { Reply } from "../components/reply";
-import { getPostById } from "../queries";
+import { getPostById, getRepliesByPostId } from "../queries";
 import z from "zod";
 import { DateTime } from "luxon";
 
@@ -38,7 +38,8 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     throw new Error("Invalid post ID");
   }
   const post = await getPostById({ post_id: parsedParams.postId });
-  return { post };
+  const replies = await getRepliesByPostId({ post_id: parsedParams.postId });
+  return { post, replies };
 };
 
 export default function PostPage({ loaderData }: Route.ComponentProps) {
@@ -69,14 +70,14 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="grid grid-cols-6 items-start gap-40">
-        <div className="col-span-4 space-y-10">
+      <div className="grid grid-cols-1 xl:grid-cols-6 items-start gap-10 xl:gap-40">
+        <div className="col-span-1 xl:col-span-4 space-y-10">
           <div className="flex w-full items-start gap-10">
             <Button variant="outline" className="flex flex-col h-14">
               <ChevronUpIcon className="size-4 shrink-0" />
-              <span>10</span>
+              <span>{loaderData.post.upvotes}</span>
             </Button>
-            <div className="space-y-20">
+            <div className="space-y-20 w-full">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold">
                   What is the best productivity tool?
@@ -117,19 +118,23 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   {loaderData.post.replies_count === 1 ? "reply" : "replies"}
                 </h4>
                 <div className="flex flex-col gap-5">
-                  <Reply
-                    avatarUrl="https://github.com/microsoft.png"
-                    username="Nicolas"
-                    content="I'm using Notion for my daily tasks. It's great for organizing my work and personal life."
-                    createdAt="12 hours ago"
-                    topLevel
-                  />
+                  {loaderData.replies.map((reply) => (
+                    <Reply
+                      key={reply.post_reply_id}
+                      content={reply.reply}
+                      createdAt={reply.created_at}
+                      avatarUrl={reply.user.avatar}
+                      username={reply.user.username}
+                      topLevel={true}
+                      replies={reply.post_replies}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <aside className="col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
+        <aside className="col-span-1 xl:col-span-2 space-y-5 border rounded-lg shadow-sm p-6">
           <div className="flex gap-5">
             <Avatar className="size-14">
               {loaderData.post.author_avatar && (

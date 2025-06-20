@@ -135,3 +135,29 @@ export const getPostById = async ({ post_id }: { post_id: number }) => {
   if (error) throw new Error(error.message);
   return data;
 };
+
+export const getRepliesByPostId = async ({ post_id }: { post_id: number }) => {
+  const replyQuery = `
+  post_reply_id,
+  reply,
+  created_at,
+  user:profiles (
+    name,
+    avatar,
+    username
+  )
+  `;
+  const { data, error } = await supabaseClient
+    .from("post_replies")
+    .select(
+      `
+      ${replyQuery},
+      post_replies (
+        ${replyQuery}
+      )
+      `
+    )
+    .eq("post_id", post_id);
+  if (error) throw new Error(error.message);
+  return data;
+};
