@@ -5,7 +5,7 @@ import { Button } from "~/common/components/ui/button";
 interface Product {
   product_id: number;
   name: string;
-  description: string;
+  tagline: string;
   reviews: string;
   views: string;
   upvotes: string;
@@ -38,9 +38,9 @@ export function LeaderboardGrid({
       </div>
       {products.map((product) => (
         <ProductCard
-          id={product.product_id.toString()}
+          id={product.product_id}
           name={product.name}
-          description={product.description}
+          tagline={product.tagline}
           reviewsCount={product.reviews}
           viewsCount={product.views}
           votesCount={product.upvotes}

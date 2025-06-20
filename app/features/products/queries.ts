@@ -5,7 +5,7 @@ import { CATEGORY_PAGE_SIZE, LEADERBOARD_PAGE_SIZE } from "./constants";
 const productSelectList = `
 product_id,
 name,
-description,
+tagline,
 upvotes:stats->>upvotes,
 views:stats->>views,
 reviews:stats->>reviews
@@ -111,6 +111,34 @@ export const getCategoryPagesByCategoryId = async ({
     .from("products")
     .select(`product_id`, { count: "exact", head: true })
     .eq("category_id", categoryId);
+
+  if (error) throw error;
+  if (!count) return 1;
+  return Math.ceil(count / CATEGORY_PAGE_SIZE);
+};
+
+export const getProductsBySearch = async ({
+  query,
+  page = 1,
+}: {
+  query: string;
+  page?: number;
+}) => {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select(productSelectList)
+    .or(`name.ilike.%${query}%, tagline.ilike.%${query}%`)
+    .range((page - 1) * CATEGORY_PAGE_SIZE, page * CATEGORY_PAGE_SIZE - 1);
+
+  if (error) throw error;
+  return data;
+};
+
+export const getPagesBySearch = async ({ query }: { query: string }) => {
+  const { count, error } = await supabaseClient
+    .from("products")
+    .select(`product_id`, { count: "exact", head: true })
+    .or(`name.ilike.%${query}%, tagline.ilike.%${query}%`);
 
   if (error) throw error;
   if (!count) return 1;

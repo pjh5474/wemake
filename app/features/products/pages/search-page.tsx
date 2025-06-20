@@ -6,6 +6,7 @@ import ProductPagination from "~/common/components/product-pagination";
 import { ProductCard } from "../components/product-card";
 import { Input } from "~/common/components/ui/input";
 import { Button } from "~/common/components/ui/button";
+import { getPagesBySearch, getProductsBySearch } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -22,7 +23,7 @@ const paramsSchema = z.object({
   page: z.coerce.number().int().optional().default(1),
 });
 
-export function loader({ request }: Route.LoaderArgs) {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const { success, data: parsedData } = paramsSchema.safeParse(
     Object.fromEntries(url.searchParams)
@@ -36,15 +37,36 @@ export function loader({ request }: Route.LoaderArgs) {
       { status: 400 }
     );
   }
-}
+
+  if (parsedData.query.length < 3) {
+    return {
+      products: [],
+      totalPages: 1,
+      query: "",
+      queryLengthLessThanThree: true,
+    };
+  }
+
+  const products = await getProductsBySearch({
+    query: parsedData.query,
+    page: parsedData.page,
+  });
+
+  const totalPages = await getPagesBySearch({
+    query: parsedData.query,
+  });
+
+  return {
+    products,
+    totalPages,
+    query: parsedData.query,
+  };
+};
 
 export default function SearchPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-10">
-      <Hero
-        title="Search"
-        subtitle="Search for products by title or description"
-      />
+      <Hero title="Search" subtitle="Search for products by title or tagline" />
       <Form className="flex justify-center mx-auto max-w-screen-sm items-center gap-2">
         <Input
           name="query"
@@ -53,20 +75,38 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
         />
         <Button type="submit">Search</Button>
       </Form>
+      {/* Query length less than 3 */}
+      {loaderData.queryLengthLessThanThree ? (
+        <div className="text-center text-gray-600">
+          <h2 className="text-lg font-semibold">
+            Search query must be at least 3 characters long
+          </h2>
+        </div>
+      ) : loaderData.products.length === 0 ? (
+        <div className="text-center text-gray-600">
+          <h2 className="text-lg font-semibold">
+            No products found with "{loaderData.query}"
+          </h2>
+          <p>Try searching for something else</p>
+        </div>
+      ) : null}
+
       <div className="space-y-5 w-full max-w-screen-md mx-auto">
-        {Array.from({ length: 11 }).map((_, index) => (
+        {loaderData.products.map((product) => (
           <ProductCard
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentsCount={12}
-            viewsCount={12}
-            votesCount={120}
-            key={`productId-${index}`}
+            id={product.product_id}
+            name={product.name}
+            tagline={product.tagline}
+            reviewsCount={product.reviews}
+            viewsCount={product.views}
+            votesCount={product.upvotes}
+            key={`searchProductCardId-${product.product_id}`}
           />
         ))}
       </div>
-      <ProductPagination totalPages={10} />
+      {loaderData.products.length > 0 && (
+        <ProductPagination totalPages={loaderData.totalPages} />
+      )}
     </div>
   );
 }

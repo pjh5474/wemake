@@ -20,8 +20,8 @@ export default function ProfilePostsPage() {
           title={`Discussion Title ${index}`}
           author="Nico"
           authorAvatarUrl="https://github.com/shadcn.png"
-          category="Productivity"
-          createdAt={new Date()}
+          topic="Productivity"
+          createdAt={new Date().toISOString()}
           key={index}
           expanded
         />

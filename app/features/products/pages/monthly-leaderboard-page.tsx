@@ -153,7 +153,7 @@ export default function MonthlyLeaderboardPage({
             <ProductCard
               id={product.product_id}
               name={product.name}
-              description={product.description}
+              tagline={product.tagline}
               reviewsCount={product.reviews}
               viewsCount={product.views}
               votesCount={product.upvotes}

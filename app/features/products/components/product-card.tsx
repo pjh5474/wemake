@@ -12,7 +12,7 @@ import { ChevronUpIcon, EyeIcon, MessageCircleIcon } from "lucide-react";
 interface ProductCardProps {
   id: number;
   name: string;
-  description: string;
+  tagline: string;
   reviewsCount: string;
   viewsCount: string;
   votesCount: string;
@@ -21,7 +21,7 @@ interface ProductCardProps {
 export function ProductCard({
   id,
   name,
-  description,
+  tagline,
   reviewsCount,
   viewsCount,
   votesCount,
@@ -32,7 +32,7 @@ export function ProductCard({
         <CardHeader className="w-full h-full mt-auto">
           <CardTitle>{name}</CardTitle>
           <CardDescription className="text-muted-foreground">
-            {description}
+            {tagline}
           </CardDescription>
           <div className="flex items-center gap-4 mt-2">
             <div className="flex items-center gap-px text-xs text-muted-foreground">
