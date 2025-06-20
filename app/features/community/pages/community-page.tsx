@@ -80,8 +80,8 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
         title="Community"
         subtitle="Ask questions, share ideas, and connect with other members of the wemake community."
       />
-      <div className="grid grid-cols-6 items-start gap-40">
-        <div className="col-span-4 space-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-6 items-start gap-15 xl:gap-40">
+        <div className="col-span-1 md:col-span-4 space-y-10">
           <div className="flex justify-between">
             <div className="space-y-5 w-full">
               <div className="flex items-center gap-5">
@@ -176,7 +176,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
             </Await>
           </Suspense>
         </div>
-        <aside className="col-span-2 space-y-5">
+        <aside className="col-span-1 md:col-span-2 space-y-5">
           <span className="text-sm font-bold text-muted-foreground uppercase">
             Topics
           </span>
