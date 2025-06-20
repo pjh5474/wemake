@@ -144,3 +144,13 @@ export const getPagesBySearch = async ({ query }: { query: string }) => {
   if (!count) return 1;
   return Math.ceil(count / CATEGORY_PAGE_SIZE);
 };
+
+export const getProductById = async ({ productId }: { productId: number }) => {
+  const { data, error } = await supabaseClient
+    .from("product_overview_view")
+    .select("*")
+    .eq("product_id", productId)
+    .single();
+  if (error) throw error;
+  return data;
+};

@@ -3,32 +3,74 @@ import { NavLink, Outlet } from "react-router";
 import { Button, buttonVariants } from "~/common/components/ui/button";
 import type { Route } from "./+types/product-overview-layout";
 import { cn } from "~/lib/utils";
+import { getProductById } from "../queries";
+import z from "zod";
+
+const paramSchema = z.object({
+  productId: z.coerce.string().transform((val) => Number(val)),
+});
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const { success, data: parsedParams } = paramSchema.safeParse(params);
+  if (!success) {
+    throw new Error("Invalid product ID");
+  }
+  const product = await getProductById({ productId: parsedParams.productId });
+  return { product };
+};
+
+export const meta: Route.MetaFunction = ({ data }: Route.MetaArgs) => {
+  return [
+    { title: `${data?.product.name} Overview | WeMake` },
+    { name: "description", content: data?.product.tagline },
+  ];
+};
 
 export default function ProductOverviewLayout({
-  params: { productId },
+  loaderData,
 }: Route.ComponentProps) {
   return (
     <div className="space-y-10">
-      <div className="flex justify-between">
+      <div className="flex flex-col lg:flex-row justify-between gap-10">
         <div className="flex gap-10">
-          <div className="size-40 rounded-xl shadow-xl bg-primary/10"></div>
+          <div className="size-24 md:size-32 lg:size-40 rounded-xl shadow-xl bg-primary/10"></div>
           <div>
-            <h1 className="text-5xl font-bold">Product Name</h1>
-            <p className="text-2xl  font-light">Product Description</p>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+              {loaderData.product.name}
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl  font-light">
+              {loaderData.product.tagline}
+            </p>
             <div className="mt-5 flex items-center gap-2">
+              <div className="flex text-yellow-500">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <StarIcon
+                    key={`starIcon-${index}`}
+                    className="size-4"
+                    fill={
+                      index < Math.floor(loaderData.product.average_rating)
+                        ? "currentColor"
+                        : "none"
+                    }
+                  />
+                ))}
+              </div>
               <span className="text-muted-foreground text-base">
-                100 reviews
+                {loaderData.product.reviews} reviews
               </span>
             </div>
           </div>
         </div>
         <div className="flex gap-5">
-          <Button variant="secondary" size="lg" className="text-lg h-14 px-10">
+          <Button
+            variant="secondary"
+            className="text-md lg:text-lg h-14 px-5 lg:px-10"
+          >
             Visit Website
           </Button>
-          <Button size="lg" className="text-lg h-14 px-10">
+          <Button className="text-md lg:text-lg h-14 px-5 lg:px-10">
             <ChevronUp className="size-4" />
-            Upvote (100)
+            Upvote ({loaderData.product.upvotes})
           </Button>
         </div>
       </div>
@@ -40,7 +82,7 @@ export default function ProductOverviewLayout({
               isActive && "bg-primary text-primary-foreground"
             )
           }
-          to={`/products/${productId}/overview`}
+          to={`/products/${loaderData.product.product_id}/overview`}
           end
         >
           Overview
@@ -52,14 +94,19 @@ export default function ProductOverviewLayout({
               isActive && "bg-primary text-primary-foreground"
             )
           }
-          to={`/products/${productId}/reviews`}
+          to={`/products/${loaderData.product.product_id}/reviews`}
           end
         >
           Reviews
         </NavLink>
       </div>
       <div>
-        <Outlet />
+        <Outlet
+          context={{
+            productDescription: loaderData.product.description,
+            productHowItWorks: loaderData.product.how_it_works,
+          }}
+        />
       </div>
     </div>
   );
