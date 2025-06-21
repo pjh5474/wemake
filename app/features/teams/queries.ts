@@ -1,10 +1,14 @@
-import { supabaseClient } from "~/supa-client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { type Database } from "~/supa-client";
 
-export const getTeams = async ({ limit }: { limit: number }) => {
-  const { data, error } = await supabaseClient
-    .from("teams")
-    .select(
-      `
+export const getTeams = async (
+	supabaseClient: SupabaseClient<Database>,
+	{ limit }: { limit: number }
+) => {
+	const { data, error } = await supabaseClient
+		.from("teams")
+		.select(
+			`
         team_id,
         roles,
         product_description,
@@ -13,20 +17,23 @@ export const getTeams = async ({ limit }: { limit: number }) => {
         avatar
         )
     `
-    )
-    .limit(limit);
+		)
+		.limit(limit);
 
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
+	if (error) {
+		throw new Error(error.message);
+	}
+	return data;
 };
 
-export const getTeamById = async ({ team_id }: { team_id: number }) => {
-  const { data, error } = await supabaseClient
-    .from("teams")
-    .select(
-      `
+export const getTeamById = async (
+	supabaseClient: SupabaseClient<Database>,
+	{ team_id }: { team_id: number }
+) => {
+	const { data, error } = await supabaseClient
+		.from("teams")
+		.select(
+			`
         team_id,
         team_leader:profiles!inner(
             username,
@@ -41,12 +48,12 @@ export const getTeamById = async ({ team_id }: { team_id: number }) => {
         product_stage,
         created_at
     `
-    )
-    .eq("team_id", team_id)
-    .single();
+		)
+		.eq("team_id", team_id)
+		.single();
 
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
+	if (error) {
+		throw new Error(error.message);
+	}
+	return data;
 };
